@@ -21,6 +21,7 @@ dependencies:
   flutter_localized_locales: ^2.0.3
   flutter_dotenv: ^5.0.2
   supabase_flutter: ^1.10.14
+  uuid: ^4.0.0
 
 dev_dependencies:
   flutter_test:

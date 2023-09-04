@@ -13,7 +13,8 @@ class TODOSList extends ConsumerStatefulWidget {
 
 class TODOSListState extends ConsumerState<TODOSList> {
   List<Task> tasks = [];
-  void intialize() async {
+
+  Future intialize() async {
     final tasks = await getTasks();
     if (tasks != null) {
       setState(() {
@@ -30,29 +31,32 @@ class TODOSListState extends ConsumerState<TODOSList> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        ...tasks
-            .map(
-              (e) => ListTile(
-                onTap: () {},
-                leading: Icon(e.status == TaskStatus.completed ? Icons.check : Icons.calendar_month),
-                title: Text(e.taskName ?? ''),
-                subtitle: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(formatDateTimeAMPM(e.createdAt ?? '')!),
-                    const SizedBox(height: 5),
-                    Text('${e.userCreated?.firstName ?? ''} ${e.userCreated?.lastName ?? ''}'),
-                  ],
+    return RefreshIndicator(
+      onRefresh: () async => await intialize(),
+      child: ListView(
+        children: [
+          ...tasks
+              .map(
+                (e) => ListTile(
+                  onTap: () {},
+                  leading: Icon(e.status == TaskStatus.completed ? Icons.check : Icons.calendar_month),
+                  title: Text(e.taskName ?? ''),
+                  subtitle: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(formatDateTimeAMPM(e.createdAt ?? '')!),
+                      const SizedBox(height: 5),
+                      Text('${e.userCreated?.firstName ?? ''} ${e.userCreated?.lastName ?? ''}'),
+                    ],
+                  ),
+                  //isThreeLine: true,
+                  trailing: const Icon(Icons.chevron_right),
                 ),
-                //isThreeLine: true,
-                trailing: const Icon(Icons.chevron_right),
-              ),
-            )
-            .toList(),
-      ],
+              )
+              .toList(),
+        ],
+      ),
     );
   }
 }
